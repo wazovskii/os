@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <sys/sysctl.h>
 #include <dirent.h>
 
 static unsigned int total = 0;
@@ -15,14 +16,14 @@ int sum(const char *fpath, const struct stat *sb, int typeflag) {
 }
 
 int size(int argc, char **argv) {
-    if (!argv[1] || access(argv[1], R_OK)) {
+    if (!argv[2] || access(argv[2], R_OK)) {
         return 1;
     }
-    if (ftw(argv[1], &sum, 1)) {
+    if (ftw(argv[2], &sum, 1)) {
         perror("ftw");
         return 2;
     }
-    printf("%s: %u\n", argv[1], total);
+    printf("%s: %u\n", argv[2], total);
     return 0;
 }
 
@@ -30,7 +31,7 @@ int ls(int argn, char * argv[])
 {
     DIR *d;
     struct dirent *dir;
-    d = opendir(argv[1]);
+    d = opendir(argv[2]);
     if (d)
     {
         while ((dir = readdir(d)) != NULL)
@@ -70,22 +71,22 @@ void trans(int argn, char * argv[])
             printf("Error writing to file.\n");
             exit(1);
         }
-    //remove(src_path);
+    remove(src_path);
 }
 
 void cpy(int argn, char * argv[])
 {
-    int src_fd, dst_fd, err,i=0;
+    int src_fd, dst_fd, err;
     unsigned char buffer[4096];
-    char * src_path, * dst_path, *txt;
+    char * src_path, * dst_path;
 
-    if (argn != 3) {
+    if (argn != 4) {
         printf("Wrong argument count.\n");
         exit(1);
     }
 
-    src_path = argv[1];
-    dst_path = argv[2];
+    src_path = argv[2];
+    dst_path = argv[3];
 
     src_fd = open(src_path, O_RDONLY);
     dst_fd = open(dst_path, O_WRONLY |O_CREAT, 0666);
@@ -102,7 +103,6 @@ void cpy(int argn, char * argv[])
             printf("Error writing to file.\n");
             exit(1);
         }
-    //remove(src_path);
 }
 
 int main(int argn, char * argv[]) {
@@ -112,9 +112,10 @@ int main(int argn, char * argv[]) {
         printf("Avalible arguments are: \n");
         printf("-t to transfer file to another directory example:\n  -t /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/tes \n");
         printf("-r to delete file example:\n -r /Users/wazovski/Desktop/distant/oss/test.txt \n");
-        printf("-c to copy file in present directory example:\n /Users/wazovski/Desktop/distant/oss/test.txt \n");
-        printf("-s to see size of directory or file  example:\n /Users/wazovski/Desktop/distant/oss/test.txt \n");
-        printf("-ls to see all files in directory  example:\n /Users/wazovski/Desktop/distant/oss \n");
+        printf("-c to copy file in present directory example:\n -c /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/oss/test1.txt \n");
+        printf("-s to see size of directory or file  example:\n -s /Users/wazovski/Desktop/distant/oss/test.txt \n");
+        printf("-ls to see all files in directory  example:\n -ls /Users/wazovski/Desktop/distant/oss \n");
+        printf("-pr to see all processes in /proc directory  example:\n -pr \n");
     }
     else if(strncmp(argv[1],"-t",2)==0)
     {
@@ -136,5 +137,9 @@ int main(int argn, char * argv[]) {
     {
         ls(argn,argv);
     }
-    
+    else if(strncmp(argv[1],"-pr",2)==0)
+    {
+        argv[1]="/proc";
+        ls(1,argv);
+    }
 }
