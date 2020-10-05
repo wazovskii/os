@@ -7,7 +7,7 @@
 #include <errno.h>
 #include <sys/sysctl.h>
 #include <dirent.h>
-
+#include <string.h>
 static unsigned int total = 0;
 
 int sum(const char *fpath, const struct stat *sb, int typeflag) {
@@ -106,7 +106,7 @@ void cpy(int argn, char * argv[])
 }
 
 int main(int argn, char * argv[]) {
-    if(strncmp(argv[1],"-h",2)==0)
+     if(strncmp(argv[1],"-h",2)==0)
     {
         printf("Copyright reserved by Nizamova Veronika\n");
         printf("Avalible arguments are: \n");
