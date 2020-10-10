@@ -49,13 +49,13 @@ void trans(int argn, char * argv[])
     unsigned char buffer[4096];
     char * src_path, * dst_path;
 
-    if (argn != 3) {
+    if (argn != 4) {
         printf("Wrong argument count.\n");
         exit(1);
     }
 
-    src_path = argv[1];
-    dst_path = argv[2];
+    src_path = argv[2];
+    dst_path = argv[3];
 
     src_fd = open(src_path, O_RDONLY);
     dst_fd = open(dst_path, O_WRONLY | O_CREAT | O_EXCL, 0666);
@@ -105,6 +105,59 @@ void cpy(int argn, char * argv[])
         }
 }
 
+int pro()
+{
+    DIR *d, *d1;
+    struct dirent *dir, *dir1;
+    int c=0;
+    d = opendir("/Users/wazovski/Desktop/distant/");
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+            char path[50]="/Users/wazovski/Desktop/distant/";//"/Users/wazovski/Desktop/distant/";
+            strncat(path,dir->d_name,strlen(dir->d_name));
+            d1=opendir(path);
+            while ((dir1 = readdir(d1)) != NULL)
+            {
+                //c++;
+            }
+        }
+        closedir(d);
+    }
+    return(0);
+}
+
+int lspr(int argn, char * argv[])
+{
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(argv[1]);
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+            if(atoi(dir->d_name)!=NULL){
+                int pid;
+                sscanf(dir->d_name, "%d", &pid);
+                printf("pid = %d\n", pid);
+                char filename[1000];
+                sprintf(filename, "/proc/%d/stat", pid);
+                FILE *f = fopen(filename, "r");
+                int unused;
+                char comm[1000];
+                char state;
+                int ppid;
+                fscanf(f, "%d %s %d", &unused, comm);
+                printf("comm = %s\n", comm);
+                fclose(f);
+            }
+        }
+    closedir(d);
+}
+return(0);
+}
+
 int main(int argn, char * argv[]) {
      if(strncmp(argv[1],"-h",2)==0)
     {
@@ -123,7 +176,7 @@ int main(int argn, char * argv[]) {
     }
     else if(strncmp(argv[1],"-r",2)==0)
     {
-        remove(argv[1]);
+        remove(argv[2]);
     }
     else if(strncmp(argv[1],"-c",2)==0)
     {
@@ -140,6 +193,6 @@ int main(int argn, char * argv[]) {
     else if(strncmp(argv[1],"-pr",2)==0)
     {
         argv[1]="/proc";
-        ls(1,argv);
+        lspr(1,argv);
     }
 }
