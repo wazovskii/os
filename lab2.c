@@ -105,30 +105,8 @@ void cpy(int argn, char * argv[])
         }
 }
 
-int pro()
-{
-    DIR *d, *d1;
-    struct dirent *dir, *dir1;
-    int c=0;
-    d = opendir("/Users/wazovski/Desktop/distant/");
-    if (d)
-    {
-        while ((dir = readdir(d)) != NULL)
-        {
-            char path[50]="/Users/wazovski/Desktop/distant/";//"/Users/wazovski/Desktop/distant/";
-            strncat(path,dir->d_name,strlen(dir->d_name));
-            d1=opendir(path);
-            while ((dir1 = readdir(d1)) != NULL)
-            {
-                //c++;
-            }
-        }
-        closedir(d);
-    }
-    return(0);
-}
 
-int lspr(int argn, char * argv[])
+int lspr(char * argv[])
 {
     DIR *d;
     struct dirent *dir;
@@ -193,6 +171,6 @@ int main(int argn, char * argv[]) {
     else if(strncmp(argv[1],"-pr",2)==0)
     {
         argv[1]="/proc";
-        lspr(1,argv);
+        lspr(argv);
     }
 }
