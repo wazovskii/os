@@ -18,8 +18,18 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <signal.h>
 
-int main(){//int argn, char * argv[]) {
+void signalHandler(int signal)
+{
+    printf("Cought signal %d!\n",signal);
+    if (signal==SIGCHLD) {
+        printf("Child ended\n");
+        wait(NULL);
+    }
+}
+
+int main(){
     while(1){
         
         char **options = (char**) malloc(6*sizeof(char*));
@@ -84,7 +94,7 @@ int main(){//int argn, char * argv[]) {
             argv[1]="/proc";
             lspr(argv);
         }
-        else if ((strncmp(argv[1],"-ch",2)==0)&&(argv[2]==NULL))
+        else if (strncmp(argv[1],"-ch",2)==0)
         {
             pid_t pid;
             int rv,status;
@@ -94,54 +104,45 @@ int main(){//int argn, char * argv[]) {
                     perror("fork"); /* произошла ошибка */
                     exit(1); /*выход из родительского процесса*/
                 case 0:
-                    printf(" CHILD: Это процесс-потомок!\n");
                     printf(" CHILD: Мой PID — %d\n", getpid());
-                    printf(" CHILD: PID моего родителя — %d\n",
-                    getppid());
-                    printf(" CHILD: Введите мой код возврата (как можно меньше):");
-                    scanf(" %d");
                     printf(" CHILD: Выход!\n");
                     exit(rv);
                 default:
                     printf("PARENT: Это процесс-родитель!\n");
-                    printf("PARENT: Мой PID — %d\n", getpid());
-                    printf("PARENT: PID моего потомка %d\n",pid);
-                    printf("PARENT: Я жду, пока потомок не вызовет exit()...\n");
+                    signal(SIGCHLD,signalHandler);
                     wait(&status);
-                    printf("PARENT: Код возврата потомка:%d\n",
-                    WEXITSTATUS(rv));
                     printf("PARENT: Выход!\n");
             }
         }
-        else if ((strncmp(argv[1],"-ch",2)==0)&&((strncmp(argv[2],"bg",1)==0)))
+        else if (strncmp(argv[1],"-chbg",4)==0)
         {
             printf("works!!");
-//            pid_t pid;
-//            int rv,status;
-//            switch(pid=fork())
-//            {
-//                case -1:
-//                    perror("fork"); /* произошла ошибка */
-//                    exit(1); /*выход из родительского процесса*/
-//                case 0:
-//                    printf(" CHILD: Это процесс-потомок!\n");
-//                    printf(" CHILD: Мой PID — %d\n", getpid());
-//                    printf(" CHILD: PID моего родителя — %d\n",
-//                    getppid());
-//                    printf(" CHILD: Введите мой код возврата (как можно меньше):");
-//                    scanf(" %d");
-//                    printf(" CHILD: Выход!\n");
-//                    exit(rv);
-//                default:
-//                    printf("PARENT: Это процесс-родитель!\n");
-//                    printf("PARENT: Мой PID — %d\n", getpid());
-//                    printf("PARENT: PID моего потомка %d\n",pid);
-//                    printf("PARENT: Я жду, пока потомок не вызовет exit()...\n");
-//                    wait(&status);
-//                    printf("PARENT: Код возврата потомка:%d\n",
-//                    WEXITSTATUS(rv));
-//                    printf("PARENT: Выход!\n");
-          //  }
+
+            FILE *fp= NULL;
+            pid_t process_id = 0;
+            pid_t sid = 0;
+            process_id = fork();
+            if (process_id < 0)
+            {
+                printf("fork failed!\n");
+                exit(1);
+            }
+            if (process_id > 0)
+            {
+                printf("process_id of child process %d \n", process_id);
+                exit(0);
+            }
+            umask(0);
+            sid = setsid();
+            if(sid < 0)
+            {
+                exit(1);
+            }
+            chdir("/");
+            close(STDIN_FILENO);
+            close(STDOUT_FILENO);
+            close(STDERR_FILENO);
+
         }
     }
 }
