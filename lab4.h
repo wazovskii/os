@@ -1,10 +1,13 @@
 //
-//  lab3.c
-//  lab3
+//  Header.h
+//  lab4
 //
-//  Created by Вероника Низамова on 15.10.2020.
+//  Created by Вероника Низамова on 31.10.2020.
 //  Copyright © 2020 Вероника Низамова. All rights reserved.
 //
+
+#ifndef lab4_h
+#define lab4_h
 
 #include "lab3.h"
 #include <stdio.h>
@@ -19,11 +22,12 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include"lab3.h"
 
 
-int main(){
-    while(1){
-        
+char* choise(char* client_message){
+    
+        char* message;
         char **options = (char**) malloc(6*sizeof(char*));
         int i;
         for(i=0;i<6;i++){
@@ -31,16 +35,18 @@ int main(){
         }
 
         int argn=1;
+            char sep [10]=" ";
+           char *buff;
+           buff = strtok (client_message,sep);
 
-        printf("%s\n", "insert your options. e.g.: [--ngf=20]");
-        printf("%s\n", "if finished press [ok]");
-
-        scanf("%s",options[argn]);
-        while (strcmp(options[argn],"ok")!=0){
-            argn++;
-            scanf("%s",options[argn]);
-        }
-
+           while (buff != NULL)
+           {
+              printf ("%s\n",buff);
+               options[argn]=buff;
+              buff = strtok (NULL,sep);
+               
+               argn++;
+           }
         char **argv = (char**) malloc(argn*sizeof(char*));
 
         for(i=0;i<argn;i++){
@@ -79,7 +85,7 @@ int main(){
         }
         else if(strncmp(argv[1],"-ls",2)==0)
         {
-            ls(argn,argv);
+            message=ls(argn,argv);
         }
         else if(strncmp(argv[1],"-pr",2)==0)
         {
@@ -94,5 +100,8 @@ int main(){
         {
             chbg();
         }
-    }
+    return message;
 }
+
+
+#endif /* Header_h */
