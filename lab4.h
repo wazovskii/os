@@ -25,9 +25,10 @@
 #include"lab3.h"
 
 
-char* choise(char* client_message){
+char *choise(char* client_message){
     
-        char* message;
+        //char* message=NULL;
+        char *message = malloc(100 * sizeof(char));
         char **options = (char**) malloc(6*sizeof(char*));
         int i;
         for(i=0;i<6;i++){
@@ -69,19 +70,21 @@ char* choise(char* client_message){
         }
         else if(strncmp(argv[1],"-t",2)==0)
         {
-            trans(argn, argv);
+            message=trans(argn, argv);
         }
         else if(strncmp(argv[1],"-r",2)==0)
         {
             remove(argv[2]);
+            message="removed";
         }
         else if(strncmp(argv[1],"-c",3)==0)
         {
-            cpy(argn,argv);
+            message=cpy(argn,argv);
         }
         else if(strncmp(argv[1],"-s",2)==0)
         {
-            size(argn, argv);
+            sprintf(message, "%d", size(argn, argv));;
+          //  message=sizehelp();
         }
         else if(strncmp(argv[1],"-ls",2)==0)
         {
@@ -90,15 +93,15 @@ char* choise(char* client_message){
         else if(strncmp(argv[1],"-pr",2)==0)
         {
             argv[1]="/proc";
-            lspr(argv);
+            message=lspr(argv);
         }
         else if (strncmp(argv[1],"-ch",2)==0)
         {
-            ch();
+            message=ch();
         }
         else if (strncmp(argv[1],"-chbg",4)==0)
         {
-            chbg();
+            message=chbg();
         }
     return message;
 }

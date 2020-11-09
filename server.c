@@ -81,23 +81,15 @@ void *connection_handler(void *socket_desc)
     int sock = *(int*)socket_desc;
     long read_size;
     char *message , client_message[2000];
+    //char *buffer=NULL;
     
     message = "Здравствуйте!\n -t для переноса файла в другую директорию \n -r для удаления файла\n -c для создания копии файла \n -s для измерения размера директории или файла \n -ls для вывода всего содержимого директории \n -pr для вывода запущенных процессов из директории /proc \nЧто вы хотите сделать?\n";
     write(sock , message , strlen(message));
-//    message=NULL;
-//    message = "";
-//    write(sock , message , strlen(message));
-    
-//    while( (read_size = recv(sock , client_message , 2000 , 0)) > 0 )
-//    {
     read_size=recv(sock , client_message , 2000 , 0);
         //Send the message back to client
         message=NULL;
         message=choise(client_message);
         write(sock , message , strlen(message));
-//    }
-//        message=choise(client_message);
-//        write(sock , message , strlen(message));
     
     if(read_size == 0)
     {

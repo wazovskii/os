@@ -54,7 +54,7 @@ int main(){
         {
             printf("Copyright reserved by Nizamova Veronika\n");
             printf("Avalible arguments are: \n");
-            printf("-t to transfer file to another directory example:\n  -t /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/tes \n");
+            printf("-t to transfer file to another directory example:\n  -t /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/tes/test.txt \n");
             printf("-r to delete file example:\n -r /Users/wazovski/Desktop/distant/oss/test.txt \n");
             printf("-c to copy file in present directory example:\n -c /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/oss/test1.txt \n");
             printf("-s to see size of directory or file  example:\n -s /Users/wazovski/Desktop/distant/oss/test.txt \n");

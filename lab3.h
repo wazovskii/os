@@ -46,7 +46,16 @@ int size(int argc, char **argv) {
         return 2;
     }
     printf("%s: %u\n", argv[2], total);
-    return 0;
+    return total;
+}
+
+char *sizehelp()
+{
+    char *buffer;
+    char output[50];
+//    _ultoa_s(total,output,sizeof(output),10);
+    sprintf(output, "%u", total);
+    return output;
 }
 
 char *ls(int argn, char * argv[])
@@ -71,10 +80,11 @@ char *ls(int argn, char * argv[])
     return output;
 }
 
-void trans(int argn, char * argv[])
+char *trans(int argn, char * argv[])
 {
     int src_fd, dst_fd, err;
     unsigned char buffer[4096];
+    char output[300];
     char * src_path, * dst_path;
 
     if (argn != 4) {
@@ -100,12 +110,15 @@ void trans(int argn, char * argv[])
             exit(1);
         }
     remove(src_path);
+    strcat(output, "transfered");
+    return output;
 }
 
-void cpy(int argn, char * argv[])
+char *cpy(int argn, char * argv[])
 {
     int src_fd, dst_fd, err;
     unsigned char buffer[4096];
+    char output[300];
     char * src_path, * dst_path;
 
     if (argn != 4) {
@@ -131,41 +144,63 @@ void cpy(int argn, char * argv[])
             printf("Error writing to file.\n");
             exit(1);
         }
+    strcat(output, "copied");
+    return output;
 }
-void ch ()
+char* ch ()
 {
     pid_t pid;
     int rv,status;
+    char  *buffer;
+    char output[300];
     switch(pid=fork())
     {
         case -1:
             perror("fork"); /* произошла ошибка */
+            buffer="err";
+            strcat(output, buffer);
             exit(1); /*выход из родительского процесса*/
         case 0:
             printf(" CHILD: Мой PID — %d\n", getpid());
+            buffer="CHILD: Мой PID";
+            strcat(output, buffer);
+            strcat(output, (char)getpid());
+            buffer="CHILD: Выход";
+            strcat(output, buffer);
             printf(" CHILD: Выход!\n");
             exit(rv);
         default:
             printf("PARENT: Это процесс-родитель!\n");
+            buffer="PARENT: Это процесс-родитель!";
+            strcat(output, buffer);
             signal(SIGCHLD,signalHandler);
             wait(&status);
             printf("PARENT: Выход!\n");
     }
+    return output;
 }
-void chbg()
+char* chbg()
 {
+    char  *buffer;
+    char output[300];
     FILE *fp= NULL;
         pid_t process_id = 0;
         pid_t sid = 0;
         process_id = fork();
         if (process_id < 0)
         {
+            buffer="fork failed";
+            strcat(output, buffer);
             printf("fork failed!\n");
             exit(1);
         }
         if (process_id > 0)
         {
-            printf("process_id of child process %d \n", process_id);
+            buffer="pid of child proc";
+            strcat(output, buffer);
+            strcat(output, (char)process_id);
+            printf("pid of child proc %d \n", process_id);
+            
             exit(0);
         }
         umask(0);
@@ -178,14 +213,15 @@ void chbg()
         close(STDIN_FILENO);
         close(STDOUT_FILENO);
         close(STDERR_FILENO);
-
+    return output;
 }
 
 char *lspr(char * argv[])
 {
     DIR *d;
     struct dirent *dir;
-    char *output, *buffer;
+    char  *buffer;
+    char output[300];
     d = opendir(argv[1]);
     if (d)
     {
@@ -203,16 +239,20 @@ char *lspr(char * argv[])
                 FILE *f = fopen(filename, "r");
                 int unused;
                 char comm[1000];
-                char state;
-                int ppid;
-                fscanf(f, "%d %s %d", &unused, comm);
+                fscanf(f, "%d %s", &unused, comm);
                 printf("comm = %s\n", comm);
+                buffer="comm=";
+                strcat(output, buffer);
+                strcat(output, comm);
                 fclose(f);
             }
         }
     closedir(d);
-}
-return output;
+    }
+    else {
+        buffer="err";
+        strcat(output, buffer);}
+    return output;
 }
 
 
