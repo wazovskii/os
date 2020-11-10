@@ -88,7 +88,7 @@ int main(){
         }
         else if (strncmp(argv[1],"-ch",2)==0)
         {
-            ch();
+            ch("-h");
         }
         else if (strncmp(argv[1],"-chbg",4)==0)
         {

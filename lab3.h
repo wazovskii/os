@@ -22,6 +22,8 @@
 #include <sys/wait.h>
 #include <signal.h>
 static unsigned int total = 0;
+char *ch();
+char* che (char *argv[]);
 
 void signalHandler(int signal)
 {
@@ -147,14 +149,21 @@ char *cpy(int argn, char * argv[])
     strcat(output, "copied");
     return output;
 }
-char* ch ()
+char *ch()
+{
+    char output[300];
+    char *message;
+    message=che("-h");
+    strcat(output, message);
+    return output;
+}
+char* che (char *argv[])
 {
     pid_t pid;
     int rv,status;
     char  *buffer;
     char output[300];
-    switch(pid=fork())
-    {
+    switch(pid=fork()){
         case -1:
             perror("fork"); /* произошла ошибка */
             buffer="err";
@@ -175,6 +184,7 @@ char* ch ()
             strcat(output, buffer);
             signal(SIGCHLD,signalHandler);
             wait(&status);
+            WEXITSTATUS(rv);
             printf("PARENT: Выход!\n");
     }
     return output;

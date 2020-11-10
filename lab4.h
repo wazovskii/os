@@ -61,10 +61,10 @@ char *choise(char* client_message){
         {
             printf("Copyright reserved by Nizamova Veronika\n");
             printf("Avalible arguments are: \n");
-            printf("-t to transfer file to another directory example:\n  -t /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/tes \n");
-            printf("-r to delete file example:\n -r /Users/wazovski/Desktop/distant/oss/test.txt \n");
-            printf("-c to copy file in present directory example:\n -c /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/oss/test1.txt \n");
-            printf("-s to see size of directory or file  example:\n -s /Users/wazovski/Desktop/distant/oss/test.txt \n");
+            printf("-t to transfer file to another directory example:\n  -t /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/tes/test.txt \n");
+            printf("-r to delete file example:\n -r /Users/wazovski/Desktop/distant/oss/test2.txt \n");
+            printf("-c to copy file in present directory example:\n -c /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/oss/test2.txt \n");
+            printf("-s to see size of directory or file  example:\n -s /Users/wazovski/Desktop/distant/oss/test1.txt \n");
             printf("-ls to see all files in directory  example:\n -ls /Users/wazovski/Desktop/distant/oss \n");
             printf("-pr to see all processes in /proc directory  example:\n -pr \n");
         }
@@ -97,7 +97,7 @@ char *choise(char* client_message){
         }
         else if (strncmp(argv[1],"-ch",2)==0)
         {
-            message=ch();
+            message=ch(argv[1]);
         }
         else if (strncmp(argv[1],"-chbg",4)==0)
         {
