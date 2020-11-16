@@ -11,4 +11,5 @@
 
 #include <stdio.h>
 void removeEndLine(char* client_message);
+char* helpclient();
 #endif /* rem_h */

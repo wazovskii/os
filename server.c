@@ -7,6 +7,7 @@
 #include<pthread.h> //for threading , link with lpthread
 #include"lab4.h"
 #include"lab3.h"
+#include"rem.h"
 
 void *connection_handler(void *);
 
@@ -94,9 +95,14 @@ void *connection_handler(void *socket_desc)
         removeEndLine(client_message);
         if ((client_message[0])!='\0')
         {
-            message=choise(client_message);
+            if (strcmp(client_message,"-h")==0)
+            {
+                message=helpclient();
+            }
+            else message=choise(client_message);
             write(sock , message , strlen(message));
         }
+        
     
     if(read_size == 0)
     {

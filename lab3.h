@@ -158,7 +158,7 @@ char *ch()
     //char output[300];
     char *chOutput = malloc(300 * sizeof(char));
     char *message;
-    message=che("-h");
+    message=che('-h');
     strcat(chOutput, message);
     return chOutput;
 }
