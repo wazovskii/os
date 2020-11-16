@@ -6,8 +6,10 @@
 #include<unistd.h>    //write
 #include<pthread.h> //for threading , link with lpthread
 #include"lab4.h"
+#include"lab3.h"
 
 void *connection_handler(void *);
+
 
 int main(int argc , char *argv[])
 {
@@ -85,11 +87,16 @@ void *connection_handler(void *socket_desc)
     
     message = "Здравствуйте!\n -t для переноса файла в другую директорию \n -r для удаления файла\n -c для создания копии файла \n -s для измерения размера директории или файла \n -ls для вывода всего содержимого директории \n -pr для вывода запущенных процессов из директории /proc \nЧто вы хотите сделать?\n";
     write(sock , message , strlen(message));
+    while(1){
     read_size=recv(sock , client_message , 2000 , 0);
         //Send the message back to client
         message=NULL;
-        message=choise(client_message);
-        write(sock , message , strlen(message));
+        removeEndLine(client_message);
+        if ((client_message[0])!='\0')
+        {
+            message=choise(client_message);
+            write(sock , message , strlen(message));
+        }
     
     if(read_size == 0)
     {
@@ -100,8 +107,9 @@ void *connection_handler(void *socket_desc)
     {
         perror("Не получил");
     }
+    }
     //Free the socket pointer
-    free(socket_desc);
+    //free(socket_desc);
     
     return 0;
 }

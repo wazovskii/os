@@ -1,15 +1,6 @@
-//
-//  Header.h
-//  lab4
-//
-//  Created by Вероника Низамова on 31.10.2020.
-//  Copyright © 2020 Вероника Низамова. All rights reserved.
-//
-
 #ifndef lab4_h
 #define lab4_h
 
-#include "lab3.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -22,8 +13,17 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include"lab3.h"
+#include "lab3.h"
 
+//void removeEndLine(char* client_message)
+//{
+//    int i=0;
+//    while((client_message[i])!='\n')
+//    {
+//        i++;
+//    }
+//    client_message[i] = '\0';
+//}
 
 char *choise(char* client_message){
     
@@ -63,7 +63,7 @@ char *choise(char* client_message){
             printf("Avalible arguments are: \n");
             printf("-t to transfer file to another directory example:\n  -t /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/tes/test.txt \n");
             printf("-r to delete file example:\n -r /Users/wazovski/Desktop/distant/oss/test2.txt \n");
-            printf("-c to copy file in present directory example:\n -c /Users/wazovski/Desktop/distant/oss/test.txt /Users/wazovski/Desktop/distant/oss/test2.txt \n");
+            printf("-c to copy file in present directory example:\n -c /Users/wazovski/Desktop/distant/oss/test1.txt /Users/wazovski/Desktop/distant/oss/test2.txt \n");
             printf("-s to see size of directory or file  example:\n -s /Users/wazovski/Desktop/distant/oss/test1.txt \n");
             printf("-ls to see all files in directory  example:\n -ls /Users/wazovski/Desktop/distant/oss \n");
             printf("-pr to see all processes in /proc directory  example:\n -pr \n");
@@ -97,7 +97,7 @@ char *choise(char* client_message){
         }
         else if (strncmp(argv[1],"-ch",2)==0)
         {
-            message=ch(argv[1]);
+            message=ch();
         }
         else if (strncmp(argv[1],"-chbg",4)==0)
         {
@@ -105,6 +105,7 @@ char *choise(char* client_message){
         }
     return message;
 }
+
 
 
 #endif /* Header_h */

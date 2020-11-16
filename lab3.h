@@ -21,8 +21,9 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <ftw.h>
 static unsigned int total = 0;
-char *ch();
+//char *ch();
 char* che (char *argv[]);
 
 void signalHandler(int signal)
@@ -51,22 +52,23 @@ int size(int argc, char **argv) {
     return total;
 }
 
-char *sizehelp()
-{
-    char *buffer;
-    char output[50];
-//    _ultoa_s(total,output,sizeof(output),10);
-    sprintf(output, "%u", total);
-    return output;
-}
+//char *sizehelp()
+//{
+////    char *buffer;
+//    //char sizeOutput[50];
+//    char *sizeOutput = malloc(50 * sizeof(char));
+//    sprintf(sizeOutput, "%u", total);
+//    return sizeOutput;
+//}
 
 char *ls(int argn, char * argv[])
 {
     DIR *d;
     struct dirent *dir;
     char *buffer;
-    char output[300];
-//    output[0]=" ";
+    //char lsOutput[300];
+    char *lsOutput = malloc(300 * sizeof(char));
+//    lsOutput[0]=" ";
     d = opendir(argv[2]);
     if (d)
     {
@@ -74,19 +76,20 @@ char *ls(int argn, char * argv[])
         {
             printf("%s\n", dir->d_name);
             buffer=dir->d_name;
-            strcat(output, buffer);
-            strcat(output, " ");
+            strcat(lsOutput, buffer);
+            strcat(lsOutput, " ");
         }
         closedir(d);
     }
-    return output;
+    return lsOutput;
 }
 
 char *trans(int argn, char * argv[])
 {
     int src_fd, dst_fd, err;
     unsigned char buffer[4096];
-    char output[300];
+    //char output[300];
+    char *transOutput = malloc(300 * sizeof(char));
     char * src_path, * dst_path;
 
     if (argn != 4) {
@@ -112,15 +115,16 @@ char *trans(int argn, char * argv[])
             exit(1);
         }
     remove(src_path);
-    strcat(output, "transfered");
-    return output;
+    strcat(transOutput, "transfered");
+    return transOutput;
 }
 
 char *cpy(int argn, char * argv[])
 {
     int src_fd, dst_fd, err;
     unsigned char buffer[4096];
-    char output[300];
+    //char output[300];
+    char *copyOutput = malloc(300 * sizeof(char));
     char * src_path, * dst_path;
 
     if (argn != 4) {
@@ -146,69 +150,74 @@ char *cpy(int argn, char * argv[])
             printf("Error writing to file.\n");
             exit(1);
         }
-    strcat(output, "copied");
-    return output;
+    strcat(copyOutput, "copied");
+    return copyOutput;
 }
 char *ch()
 {
-    char output[300];
+    //char output[300];
+    char *chOutput = malloc(300 * sizeof(char));
     char *message;
     message=che("-h");
-    strcat(output, message);
-    return output;
+    strcat(chOutput, message);
+    return chOutput;
 }
 char* che (char *argv[])
 {
     pid_t pid;
-    int rv,status;
+    int rv=0,status;
     char  *buffer;
-    char output[300];
+    //char output[300];
+    char *cheOutput = malloc(300 * sizeof(char));
     switch(pid=fork()){
         case -1:
             perror("fork"); /* произошла ошибка */
             buffer="err";
-            strcat(output, buffer);
+            strcat(cheOutput, buffer);
             exit(1); /*выход из родительского процесса*/
         case 0:
             printf(" CHILD: Мой PID — %d\n", getpid());
             buffer="CHILD: Мой PID";
-            strcat(output, buffer);
-            strcat(output, (char)getpid());
+            strcat(cheOutput, buffer);
+            sprintf(cheOutput, "%d", getpid());
+            //strcat(cheOutput, itoa(getpid()));
             buffer="CHILD: Выход";
-            strcat(output, buffer);
+            strcat(cheOutput, buffer);
             printf(" CHILD: Выход!\n");
             exit(rv);
         default:
             printf("PARENT: Это процесс-родитель!\n");
             buffer="PARENT: Это процесс-родитель!";
-            strcat(output, buffer);
+            strcat(cheOutput, buffer);
             signal(SIGCHLD,signalHandler);
             wait(&status);
             WEXITSTATUS(rv);
             printf("PARENT: Выход!\n");
     }
-    return output;
+    return cheOutput;
 }
 char* chbg()
 {
     char  *buffer;
-    char output[300];
-    FILE *fp= NULL;
+    //char output[300];
+    char *chbgOutput = malloc(300 * sizeof(char));
+//    FILE *fp= NULL;
         pid_t process_id = 0;
         pid_t sid = 0;
         process_id = fork();
         if (process_id < 0)
         {
             buffer="fork failed";
-            strcat(output, buffer);
+            strcat(chbgOutput, buffer);
             printf("fork failed!\n");
             exit(1);
         }
         if (process_id > 0)
         {
             buffer="pid of child proc";
-            strcat(output, buffer);
-            strcat(output, (char)process_id);
+            strcat(chbgOutput, buffer);
+            //strcat(chbgOutput, (char)process_id);
+            sprintf(chbgOutput, "%d", process_id);
             printf("pid of child proc %d \n", process_id);
             
             exit(0);
@@ -223,7 +232,7 @@ char* chbg()
         close(STDIN_FILENO);
         close(STDOUT_FILENO);
         close(STDERR_FILENO);
-    return output;
+    return chbgOutput;
 }
 
 char *lspr(char * argv[])
@@ -231,19 +240,21 @@ char *lspr(char * argv[])
     DIR *d;
     struct dirent *dir;
     char  *buffer;
-    char output[300];
+    //char output[300];
+    char *lsprOutput = malloc(300 * sizeof(char));
     d = opendir(argv[1]);
     if (d)
     {
         while ((dir = readdir(d)) != NULL)
         {
-            if(atoi(dir->d_name)!=NULL){
+            if(atoi(dir->d_name)!=0){
                 int pid;
                 sscanf(dir->d_name, "%d", &pid);
                 printf("pid = %d\n", pid);
                 buffer="pid=";
-                strcat(output, buffer);
-                strcat(output, (char)pid);
+                strcat(lsprOutput, buffer);
+                //strcat(lsprOutput, (char)pid);
+                sprintf(lsprOutput, "%d", pid);
                 char filename[1000];
                 sprintf(filename, "/proc/%d/stat", pid);
                 FILE *f = fopen(filename, "r");
@@ -252,8 +263,8 @@ char *lspr(char * argv[])
                 fscanf(f, "%d %s", &unused, comm);
                 printf("comm = %s\n", comm);
                 buffer="comm=";
-                strcat(output, buffer);
-                strcat(output, comm);
+                strcat(lsprOutput, buffer);
+                strcat(lsprOutput, comm);
                 fclose(f);
             }
         }
@@ -261,8 +272,8 @@ char *lspr(char * argv[])
     }
     else {
         buffer="err";
-        strcat(output, buffer);}
-    return output;
+        strcat(lsprOutput, buffer);}
+    return lsprOutput;
 }
 
 
