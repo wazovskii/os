@@ -1,5 +1,5 @@
 serv: server.o libworld.so
-	gcc -o serv server.o -L. -lworld -Wl,-rpath,.
+	gcc -lpthread -o serv server.o -L. -lworld -Wl,-rpath,.
 
 server.o: server.c
 	gcc -c server.c
