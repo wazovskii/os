@@ -1,3 +1,4 @@
+https://travis-ci.com/wazovskii/os.svg?branch=master
 # os
 ## Лабораторная 3. Работа с процессами в ОС Linux. Создание проекта «LiteSH»
 
