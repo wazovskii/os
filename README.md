@@ -1,4 +1,5 @@
-https://travis-ci.com/wazovskii/os.svg?branch=master
+[![Build Status](https://travis-ci.com/wazovskii/os.svg?branch=master)](https://travis-ci.com/github/wazovskii/os)
+
 # os
 ## Лабораторная 3. Работа с процессами в ОС Linux. Создание проекта «LiteSH»
 
