@@ -1,8 +1,8 @@
 serv: server.o libworld.so
-	gcc -lpthread -o serv server.o -L. -lworld -Wl,-rpath,.
+	gcc -o serv server.o -lpthread -L. -lworld -Wl,-rpath,.
 
 server.o: server.c
-	gcc -c server.c
+	gcc -lpthread -c server.c
 
 libworld.so: rem.o
 	gcc -shared -o libworld.so rem.o
